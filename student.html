@@ -15,12 +15,12 @@
             <table>
                 <tr>
                     <td colspan="5">
-                        <select id="semesterList" style="width:100%"></select>
+                        <select id="semesterList" style="width:100%" onchange="getClass(this)"></select>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <select id="classList" style="width:100%"></select>
+                        <select id="classList" style="width:100%" onchange="getStudent(this)"></select>
                     </td>
                 </tr>
                 <tr>
@@ -54,8 +54,8 @@
                         >
                     </td>
                     <td style="text-align: right;">
-                        <button>Delete</button>
-                        <button>Add</button>
+                        <button onclick="deleteStudent()">Delete</button>
+                        <button onclick="addStudent()">Add</button>
                     </td>
                 </tr>
             </table>
@@ -67,6 +67,57 @@
 <script>
 
     getMenu();
+    getSemester();
+
+    function addStudent() {
+  // set variables
+  var classId = document.getElementById("classList").value;
+  var aryStudents = eval(`ary${classId}`);
+  var studentId = document.getElementById('meid').value;
+  var firstName = document.getElementById('firstName').value;
+  var lastName = document.getElementById('lastName').value;
+  var studentName = `${firstName} ${lastName}`;
+
+  // add new student to array
+  var newStudent = [studentId, studentName];
+  aryStudents.push(newStudent);
+
+  // add new student to student list
+  var option = document.createElement('option');
+  option.value = studentId;
+  option.text = studentName;
+  document.getElementById('studentList').add(option);
+
+  // clear input fields
+  document.getElementById('meid').value = '';
+  document.getElementById('firstName').value = '';
+  document.getElementById('lastName').value = '';
+}
+  
+    function deleteStudent() {
+  // set variables
+  var classId = document.getElementById("classList").value;
+  var aryStudents = eval(`ary${classId}`);
+  var studentId = document.getElementById('studentList').value;
+
+  // find index of student to delete
+  var index = aryStudents.findIndex(student => student[0] === studentId);
+
+  // remove student from array
+  if (index !== -1) {
+    aryStudents.splice(index, 1);
+  }
+
+  // remove student from student list
+  var studentList = document.getElementById('studentList');
+  for (var i = 0; i < studentList.options.length; i++) {
+    if (studentList.options[i].value === studentId) {
+      studentList.remove(i);
+      break;
+    }
+  }
+}
+
 
 </script>
 </html>
